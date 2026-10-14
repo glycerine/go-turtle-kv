@@ -2,7 +2,7 @@ package bench
 
 import (
 	"flag"
-	wormhole "github.com/glycerine/wormhole/go"
+	wormhole "github.com/glycerine/go-wormhole-kv"
 )
 
 var wormholeMetaCache = flag.Bool("wormhole-meta-cache", false, "enable Wormhole two-byte metadata cache")

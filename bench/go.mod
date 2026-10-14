@@ -4,10 +4,10 @@ go 1.26.4
 
 require (
 	github.com/glycerine/bufftree v0.0.3
+	github.com/glycerine/go-turtle-kv v0.1.0
+	github.com/glycerine/go-wormhole-kv v0.1.2
 	github.com/glycerine/insdict v0.14.6
 	github.com/glycerine/rbtree v0.2.2
-	github.com/glycerine/go-turtle-kv v0.1.0
-	github.com/glycerine/go-wormhole-kv v0.1.0
 	github.com/tidwall/btree v1.8.1
 )
 
