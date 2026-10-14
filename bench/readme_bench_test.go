@@ -54,9 +54,14 @@ func TestReadmeBenchmarkTable(t *testing.T) {
 	n := benchLoadSize()
 	cpu, err := comparisonCPU()
 	if err != nil {
-		t.Fatal(err)
+		if runtime.GOOS == "linux" || *comparisonBenchCPU != -1 {
+			t.Fatal(err)
+		}
+		t.Logf("running without CPU affinity: %v", err)
+	} else {
+		t.Logf("benchmark CPU (verified by each case): %d", cpu)
 	}
-	t.Logf("CPU=%d GOMAXPROCS=%d; Wormhole MetaCache=%v; Turtle options (0=default)=%+v", cpu, runtime.GOMAXPROCS(0), *wormholeMetaCache, turtleOptions())
+	t.Logf("CPU selection=%d GOMAXPROCS=%d; Wormhole MetaCache=%v; Turtle options (0=default)=%+v", *comparisonBenchCPU, runtime.GOMAXPROCS(0), *wormholeMetaCache, turtleOptions())
 	cases := make(map[string]func(*testing.B))
 	for _, bc := range comparisonPointCases(n) {
 		cases["Points/"+bc.name] = bc.run
