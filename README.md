@@ -3,7 +3,47 @@
 An in-memory ordered map following the buffered TurtleTree design in
 [Astolfi et al 2026 "Dynamic read & write optimization with TurtleKV"](turtle.pdf). 
 
-The Go API stores generic keys and values:
+# benchmarks
+
+The table below compares map[uint64]uint64 trees and hash tables. The first two get lines
+reflect randomized searching. The last shows unsorted sequential
+scan so the hash tables can really strut. All numbers are the average nanoseconds per key.
+Apple silicon ARM64 numbers are shown; AMD64 numbers has similar ratios.
+
+| Operation (report ns/key)  | Wormhole[1] | Turtle[2] | BP-Tree[3] | tidwall/btree[4] | red-black tree[5] |insdict[6]|builtin map|
+| -------------------------- | ----------: | --------: | ---------: | ---------------: | --------------: | ---------: | --------: |
+| Get hit                    |        18.0 |      57.6 |       51.3 |             56.9 |           102.0 |        5.6 |       4.0 |
+| Get miss                   |        18.1 |      61.9 |       61.7 |             56.6 |           129.2 |        5.5 |       4.4 |
+| Put fresh                  |        48.4 |      46.1 |       66.4 |             96.8 |           185.8 |       18.8 |      34.4 |
+| Ordered scan               |        1.28 |      1.28 |       1.35 |             1.79 |            9.93 |       1.97 |       N/A |
+| Unordered scan             |        1.32 |      1.28 |       1.94 |             1.03 |            9.83 |       0.31 |      4.68 |
+
+In these micro benchmarks: 
+
+Compared to the fast in memory B-tree tidwall/btree, Wormhole is 2x as fast at Puts (writing keys; 96.8 / 48.4 == 2.0),
+and 3.1x faster at Gets (reading keys; 56.6/18.1 == 3.1).
+
+Although the Turtle design matches Wormhole for writes, its reads are still 3x slower. The BP-Tree does not
+come close to Wormhole on either readers or writes, and is restricted to a single goroutine.
+
+Full table scan performance is dominated by the insdict, where pre-fetching sequential array elements makes it
+15x faster than the built-in Go map (4.68/0.31 = 15.1). Wormhole and friends are 3x faster than the built in map,
+and all support ordered scans and range queries.
+
+[1] Wormhole is: https://github.com/glycerine/go-wormhole-kv
+
+[2] Turtle is this repo; https://github.com/glycerine/go-turtle-kv
+
+[3] BP-tree: https://github.com/glycerine/bufftree
+
+[4] tidwall/btree is: https://github.com/tidwall/btree
+
+[5] the red-black tree used was: https://github.com/glycerine/rbtree
+
+[6] insdict.Dict is: https://github.com/glycerine/insdict
+
+
+# Go API stores generic keys and values
 
 ```go
 import turtle "github.com/glycerine/go-turtle-kv"
