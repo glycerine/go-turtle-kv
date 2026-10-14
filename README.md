@@ -8,7 +8,7 @@ An in-memory ordered map following the buffered TurtleTree design in
 The table below compares map[uint64]uint64 trees and hash tables. The first two get lines
 reflect randomized searching. The last shows unsorted sequential
 scan so the hash tables can really strut. All numbers are the average nanoseconds per key.
-Apple silicon ARM64 numbers are shown; AMD64 numbers has similar ratios.
+Apple silicon ARM64 numbers are shown; AMD64 numbers have similar ratios.
 
 | Operation (report ns/key)  | Wormhole[1] | Turtle[2] | BP-Tree[3] | tidwall/btree[4] | red-black tree[5] |insdict[6]|builtin map|
 | -------------------------- | ----------: | --------: | ---------: | ---------------: | --------------: | ---------: | --------: |
