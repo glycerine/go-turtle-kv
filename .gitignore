@@ -1,0 +1,7 @@
+*~
+*.test
+profiles/*.cpu
+profiles/*.mem
+profiles/*.data
+cppbench/__pycache__/
+testdata/
